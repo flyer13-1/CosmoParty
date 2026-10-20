@@ -1,0 +1,31 @@
+body {
+    
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center;     /* 縦方向中央 */
+}
+
+h1 {
+    font-size: 100px;
+ text-align: center;
+}
+#message { margin-bottom: 20px; 
+    text-align: center;
+
+}
+#title {
+    transition: transform 0.5s; 
+}
+#menu {
+    display: none; 
+    position: absolute;
+    right: 100px;
+    
+}
+
+#menu button {
+    display: block;
+    width: 200px;
+    margin: 10px 0;
+    font-size: 32px;
+}
