@@ -1,7 +1,7 @@
 # ---- Eclipseの個人設定----
 .metadata/
 Servers/
-.env
 
 # ---- プロジェクト内の除外----
 CosmoParty/build/
+CosmoParty/src/.env
