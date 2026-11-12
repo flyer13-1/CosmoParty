@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Model.Game;
+import Model.GameJb;
 
 public class game extends base {
-	protected ArrayList<Game> find() {
-		ArrayList<Game> list = new ArrayList<Game>();
+	protected ArrayList<GameJb> find() {
+		ArrayList<GameJb> list = new ArrayList<GameJb>();
 
 		try {
 			connect();
@@ -24,7 +24,7 @@ public class game extends base {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				Game game = new Game();
+				GameJb game = new GameJb();
 				game.setId(rs.getInt("id"));
 				game.setName(rs.getString("name"));
 

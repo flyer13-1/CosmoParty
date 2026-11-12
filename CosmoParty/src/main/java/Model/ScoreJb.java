@@ -1,6 +1,6 @@
 package Model;
 
-public class Score {
+public class ScoreJb{
 	
 	private int id;
 	private int gameId;
