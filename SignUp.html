@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プレイヤー登録</title>
+
+    <link rel="stylesheet" href="SignUp.css">
+</head>
+<body>
+
+    <div class="register-container">
+
+        <h1>プレイヤー登録</h1>
+
+        <!-- プレイヤー名 -->
+        <div class="form-row">
+            <div class="input-area">
+                <label for="playerName">プレイヤー名</label>
+
+                <input
+                    type="text"
+                    id="playerName"
+                    placeholder="name"
+                >
+
+                <span class="error-message" id="nameError"></span>
+            </div>
+        </div>
+
+        <!-- パスワード -->
+        <div class="form-row">
+            <div class="input-area">
+                <label for="password">パスワード</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="••••••"
+                >
+
+                <span class="error-message" id="passwordError"></span>
+            </div>
+        </div>
+
+        <!-- パスワード再入力 -->
+        <div class="form-row">
+            <div class="input-area">
+
+            <label for="confirmPassword">
+                パスワード（再度入力）
+            </label>
+
+            <input
+            type="password"
+            id="confirmPassword"
+            placeholder="••••••"
+        >
+
+                 <span
+                    class="error-message"
+                     id="passwordMatchError">
+                </span>
+                
+            </div>
+        </div>  
+
+        <!-- アバターカラー -->
+        <div class="form-row">
+            <div class="input-area">
+
+                <div class="label-line">
+                    <label>アバターカラー</label>
+
+                    <span
+                        class="error-message"
+                        id="colorError">
+                    </span>
+                </div>
+
+                <div class="color-list">
+
+                    <div class="color-option" data-color="#ff6b6b" style="background:#ff6b6b;"></div>
+                    <div class="color-option" data-color="#ff944d" style="background:#ff944d;"></div>
+                    <div class="color-option" data-color="#ffd43b" style="background:#ffd43b;"></div>
+                    <div class="color-option" data-color="#a9e34b" style="background:#a9e34b;"></div>
+                    <div class="color-option" data-color="#69db7c" style="background:#69db7c;"></div>
+                    <div class="color-option" data-color="#38d9a9" style="background:#38d9a9;"></div>
+                    <div class="color-option" data-color="#66d9ff" style="background:#66d9ff;"></div>
+                    <div class="color-option" data-color="#5c7cfa" style="background:#5c7cfa;"></div>
+                    <div class="color-option" data-color="#9775fa" style="background:#9775fa;"></div>
+                    <div class="color-option" data-color="#f065c2" style="background:#f065c2;"></div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 登録ボタン -->
+        <div class="form-row">
+            <button id="registerBtn" class="register-btn">
+                登録する
+            </button>
+        </div>
+
+        <!-- 戻るボタン -->
+        <div class="back-area">
+            <a href="menu.html" class="back-link">
+                ← 戻る
+            </a>
+        </div>
+
+    </div>
+
+    <script src="SignUp.js"></script>
+
+</body>
+</html>
