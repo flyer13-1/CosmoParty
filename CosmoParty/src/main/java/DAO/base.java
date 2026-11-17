@@ -10,7 +10,7 @@ import java.util.Properties;
 public class base {
 
 	// キーの名前
-	private static final String URL = "DB＿URL";
+	private static final String URL = "DB_URL";
 	private static final String USER = "DB_USER";
 	private static final String PW = "DB_PASS";
 

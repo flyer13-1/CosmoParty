@@ -19,7 +19,9 @@
         <a href="モード.html">
             <button id="ゲームスタート">モード選択</button>
         </a>
-        <button id="ユーザ登録">ユーザー登録</button>
+        <a href="${pageContext.request.contextPath}/SignUp">
+        		<button id="ユーザ登録">ユーザー登録</button>
+        </a>
         <button id="スコア">スコア</button>
         <button id="設定">設定</button>
         <button id="終了">終了</button>
