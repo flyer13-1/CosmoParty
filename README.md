@@ -10,4 +10,5 @@
 
 ## 設計書類
 
--[DB初期設定](init.sql) -[GAME](gameConf.md)
+- [DB初期設定](init.sql)
+- [GAME](gameConf.md)
