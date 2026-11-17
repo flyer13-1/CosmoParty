@@ -1,0 +1,68 @@
+2026-10-20 11:25:59,755 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is not available. Remote download required.
+2026-10-22 09:54:48,582 [Worker-6: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2026-10-23 09:45:28,278 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2026-10-29 09:50:59,882 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2026-10-30 09:15:53,500 [Worker-14: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2026-11-05 09:39:00,262 [Worker-15: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2026-11-12 10:03:42,940 [Worker-16: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2026-11-12 11:10:09,371 [Worker-27: https://download.oracle.com/otn_software/oepe/12.2.1.10/photon/repository/compositeContent.jar] INFO  o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000018 recoverable I/O exception (java.net.SocketException) caught when sending request to https://download.oracle.com:443;request will be automatically re-executed in 0 MILLISECONDS (exec count 2)
+2026-11-12 11:10:09,472 [Worker-20: https://downloads.sourceforge.net/project/sapnweclipse/updates/features/com.sap.netweaver.porta.ide.eclipse.feature_0.5.1.200910061011.jar] INFO  o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000019 recoverable I/O exception (java.net.SocketException) caught when sending request to https://downloads.sourceforge.net:443;request will be automatically re-executed in 0 MILLISECONDS (exec count 2)
+2026-11-12 11:10:09,797 [Worker-28: https://downloads.apache.org/geronimo/eclipse/updates/digest.zip] INFO  o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000021 recoverable I/O exception (java.net.SocketException) caught when sending request to https://downloads.apache.org:443;request will be automatically re-executed in 0 MILLISECONDS (exec count 2)
+2026-11-12 11:44:09,165 [Worker-21: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2026-11-13 09:40:23,206 [Worker-17: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2026-11-17 09:35:27,060 [Worker-2: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2026-11-17 10:34:32,374 [Worker-32: 定期的なワークスペースの保存。] ERROR o.e.m.c.i.p.r.ProjectRegistryReader - Can't write workspace state
+java.io.FileNotFoundException: I:\CosmoParty\.metadata\.plugins\org.eclipse.m2e.core\workspaceState.ser (指定されたパスが見つかりません。)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.createObjectOutputStream(ProjectRegistryReader.java:127)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.writeWorkspaceState(ProjectRegistryReader.java:116)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.writeWorkspaceState(ProjectRegistryManager.java:1052)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.saving(ProjectRegistryManager.java:1203)
+	at org.eclipse.core.internal.resources.SaveManager.executeLifecycle(SaveManager.java:466)
+	at org.eclipse.core.internal.resources.SaveManager$1.run(SaveManager.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.core.internal.resources.SaveManager.broadcastLifecycle(SaveManager.java:274)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1284)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1263)
+	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:53)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+2026-11-17 10:47:59,784 [ModalContext] ERROR o.e.m.c.i.p.r.ProjectRegistryReader - Can't write workspace state
+java.io.FileNotFoundException: I:\CosmoParty\.metadata\.plugins\org.eclipse.m2e.core\workspaceState.ser (指定されたパスが見つかりません。)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.createObjectOutputStream(ProjectRegistryReader.java:127)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.writeWorkspaceState(ProjectRegistryReader.java:116)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.writeWorkspaceState(ProjectRegistryManager.java:1052)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.saving(ProjectRegistryManager.java:1203)
+	at org.eclipse.core.internal.resources.SaveManager.executeLifecycle(SaveManager.java:466)
+	at org.eclipse.core.internal.resources.SaveManager$1.run(SaveManager.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.core.internal.resources.SaveManager.broadcastLifecycle(SaveManager.java:274)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1284)
+	at org.eclipse.core.internal.resources.Workspace.save(Workspace.java:2549)
+	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor.lambda$1(IDEWorkbenchAdvisor.java:558)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:123)
+2026-11-17 10:56:27,626 [Worker-19: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is not available. Remote download required.
+2026-11-17 11:14:16,906 [ModalContext] ERROR o.e.m.c.i.p.r.ProjectRegistryReader - Can't write workspace state
+java.io.FileNotFoundException: I:\CosmoParty\.metadata\.plugins\org.eclipse.m2e.core\workspaceState.ser (指定されたパスが見つかりません。)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.createObjectOutputStream(ProjectRegistryReader.java:127)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryReader.writeWorkspaceState(ProjectRegistryReader.java:116)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.writeWorkspaceState(ProjectRegistryManager.java:1052)
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.saving(ProjectRegistryManager.java:1203)
+	at org.eclipse.core.internal.resources.SaveManager.executeLifecycle(SaveManager.java:466)
+	at org.eclipse.core.internal.resources.SaveManager$1.run(SaveManager.java:271)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.core.internal.resources.SaveManager.broadcastLifecycle(SaveManager.java:274)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1284)
+	at org.eclipse.core.internal.resources.Workspace.save(Workspace.java:2549)
+	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor.lambda$1(IDEWorkbenchAdvisor.java:558)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:123)
