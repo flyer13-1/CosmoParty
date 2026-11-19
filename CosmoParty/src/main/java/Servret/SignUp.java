@@ -15,12 +15,12 @@ public class SignUp extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//タイトル画面
-				String forwardPath = "WEB-INF/jsp/SignUp.jsp";
-				RequestDispatcher dispatcher = request.getRequestDispatcher(forwardPath);
-				dispatcher.forward(request, response);
+		//登録画面
+		String forwardPath = "WEB-INF/jsp/SignUp.jsp";
+		RequestDispatcher dispatcher = request.getRequestDispatcher(forwardPath);
+		dispatcher.forward(request, response);
 	}
-
-
 	
+    }
+
 }

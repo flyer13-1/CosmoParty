@@ -62,6 +62,10 @@ input {
     font-size: 16px;
 }
 
+input[type="radio"] {
+    display: none;
+}
+
 /* カラー選択 */
 .color-list {
     display: flex;

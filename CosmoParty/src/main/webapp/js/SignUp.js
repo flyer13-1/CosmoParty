@@ -1,30 +1,25 @@
-const colorOptions = document.querySelectorAll('.color-option');
 
-let selectedColor = null;
+// カラー選択
+var colorOptions = document.querySelectorAll(
+    'input[name="avatarColor"]'
+);
 
-colorOptions.forEach(color => {
-    color.addEventListener('click', () => {
+var selectedColor = null;
 
-        colorOptions.forEach(c =>
-            c.classList.remove('selected')
-        );
-
-        color.classList.add('selected');
-        selectedColor = color.dataset.color;
+colorOptions.forEach(function(color) {
+    color.addEventListener('change', function() {
+        selectedColor = Number(color.value);
     });
 });
 
+
+// 登録ボタン
 document.getElementById("registerBtn")
-    .addEventListener("click", async () => {
+    .addEventListener("click", async function() {
 
-        const name =
-            document.getElementById("playerName").value.trim();
-
-        const password =
-            document.getElementById("password").value;
-
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
+        var name = document.getElementById("playerName").value.trim();
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
 
         // エラー初期化
         document.getElementById("nameError").textContent = "";
@@ -32,75 +27,79 @@ document.getElementById("registerBtn")
         document.getElementById("passwordMatchError").textContent = "";
         document.getElementById("colorError").textContent = "";
 
-        let valid = true;
+        var valid = true;
 
         // プレイヤー名
         if (name === "") {
-            document.getElementById("nameError")
-                .textContent = "プレイヤー名を入力してください";
+            document.getElementById("nameError").textContent =
+                "プレイヤー名を入力してください";
             valid = false;
         }
 
         // パスワード
         if (password === "") {
-            document.getElementById("passwordError")
-                .textContent = "パスワードを入力してください";
+            document.getElementById("passwordError").textContent =
+                "パスワードを入力してください";
             valid = false;
         }
 
         // パスワード一致確認
         if (confirmPassword === "") {
-            document.getElementById("passwordMatchError")
-                .textContent = "再入力してください";
+            document.getElementById("passwordMatchError").textContent =
+                "再入力してください";
             valid = false;
-        }
-        else if (password !== confirmPassword) {
-            document.getElementById("passwordMatchError")
-                .textContent = "パスワードが一致しません";
+        } else if (password !== confirmPassword) {
+            document.getElementById("passwordMatchError").textContent =
+                "パスワードが一致しません";
             valid = false;
         }
 
         // カラー未選択
         if (selectedColor === null) {
-            document.getElementById("colorError")
-                .textContent = "カラーを選択してください";
+            document.getElementById("colorError").textContent =
+                "カラーを選択してください";
             valid = false;
         }
 
+        // 入力エラーがあれば終了
         if (!valid) {
             return;
         }
 
-        const userData = {
-            playerName: name,
-            password: password,
-            color: selectedColor
-        };
+        // サーブレットに送るデータ
+        var userData = new URLSearchParams();
+
+        userData.append("playerName", name);
+        userData.append("password", password);
+        userData.append("color", selectedColor);
 
         try {
-
-            const response = await fetch(
-                "http://localhost:3000/register",
+            // サーブレットへ送信
+            var response = await fetch(
+                document.getElementById("registerBtn").dataset.url,
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: JSON.stringify(userData)
+                    body: userData.toString()
                 }
             );
 
-            const result = await response.json();
+            if (!response.ok) {
+                throw new Error("HTTPエラー: " + response.status);
+            }
+
+            var result = await response.json();
 
             if (result.success) {
                 alert("登録成功");
             } else {
-                alert("登録失敗");
+                alert(result.message || "登録失敗");
             }
 
         } catch (error) {
             console.error(error);
             alert("サーバー接続エラー");
         }
-
     });

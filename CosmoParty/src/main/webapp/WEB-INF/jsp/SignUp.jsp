@@ -1,120 +1,139 @@
 <%-- 文字コードをUTF-8にする --%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>プレイヤー登録</title>
+	<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+		<!DOCTYPE html>
+		<html lang="ja">
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/SignUp.css">
-</head>
-<body>
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>プレイヤー登録</title>
 
-    <div class="register-container">
+			<link rel="stylesheet" href="${pageContext.request.contextPath}/css/SignUp.css">
 
-        <h1>プレイヤー登録</h1>
+			<style>
+				input[type="radio"] {
+					display: none;
+				}
+			</style>
+		</head>
 
-        <!-- プレイヤー名 -->
-        <div class="form-row">
-            <div class="input-area">
-                <label for="playerName">プレイヤー名</label>
+		<body>
 
-                <input
-                    type="text"
-                    id="playerName"
-                    placeholder="name"
-                >
+			<div class="register-container">
 
-                <span class="error-message" id="nameError"></span>
-            </div>
-        </div>
+				<h1>プレイヤー登録</h1>
 
-        <!-- パスワード -->
-        <div class="form-row">
-            <div class="input-area">
-                <label for="password">パスワード</label>
+				<!-- プレイヤー名 -->
+				<div class="form-row">
+					<div class="input-area">
+						<label for="playerName">プレイヤー名</label> <input type="text" id="playerName" placeholder="name">
+						<span class="error-message" id="nameError"></span>
+					</div>
+				</div>
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="••••••"
-                >
+				<!-- パスワード -->
+				<div class="form-row">
+					<div class="input-area">
+						<label for="password">パスワード</label> <input type="password" id="password" placeholder="••••••">
+						<span class="error-message" id="passwordError"></span>
+					</div>
+				</div>
 
-                <span class="error-message" id="passwordError"></span>
-            </div>
-        </div>
+				<!-- パスワード再入力 -->
+				<div class="form-row">
+					<div class="input-area">
 
-        <!-- パスワード再入力 -->
-        <div class="form-row">
-            <div class="input-area">
+						<label for="confirmPassword"> パスワード（再度入力） </label> <input type="password" id="confirmPassword"
+							placeholder="••••••">
 
-            <label for="confirmPassword">
-                パスワード（再度入力）
-            </label>
+						<span class="error-message" id="passwordMatchError"> </span>
 
-            <input
-            type="password"
-            id="confirmPassword"
-            placeholder="••••••"
-        >
+					</div>
+				</div>
 
-                 <span
-                    class="error-message"
-                     id="passwordMatchError">
-                </span>
-                
-            </div>
-        </div>  
+				<!-- アバターカラー -->
+				<div class="form-row">
+					<div class="input-area">
 
-        <!-- アバターカラー -->
-        <div class="form-row">
-            <div class="input-area">
+						<div class="label-line">
+							<label>アバターカラー</label> <span class="error-message" id="colorError">
+							</span>
+						</div>
 
-                <div class="label-line">
-                    <label>アバターカラー</label>
+						<div class="color-list">
 
-                    <span
-                        class="error-message"
-                        id="colorError">
-                    </span>
-                </div>
+							<div class="color-option" data-color="#ff6b6b" style="background: #ff6b6b;">
+								<label class="a"> <input type="radio" name="avatarColor" value="01"> <span
+										style="background: #ff6b6b;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#ff944d" style="background: #ff944d;">
+								<label> <input type="radio" name="avatarColor" value="02"> <span
+										style="background: #ff944d;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#ffd43b" style="background: #ffd43b;">
+								<label> <input type="radio" name="avatarColor" value="03"> <span
+										style="background: #ffd43b;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#a9e34b" style="background: #a9e34b;">
+								<label> <input type="radio" name="avatarColor" value="04"> <span
+										style="background: #a9e34b;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#69db7c" style="background: #69db7c;">
+								<label> <input type="radio" name="avatarColor" value="05"> <span
+										style="background: #69db7c;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#38d9a9" style="background: #38d9a9;">
+								<label> <input type="radio" name="avatarColor" value="06"> <span
+										style="background: #38d9a9;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#66d9ff" style="background: #66d9ff;">
+								<label> <input type="radio" name="avatarColor" value="07"> <span
+										style="background: #66d9ff;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#5c7cfa" style="background: #5c7cfa;">
+								<label> <input type="radio" name="avatarColor" value="08"> <span
+										style="background: #5c7cfa;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#9775fa" style="background: #9775fa;">
+								<label> <input type="radio" name="avatarColor" value="09"> <span
+										style="background: #9775fa;"></span>
+								</label>
+							</div>
+							<div class="color-option" data-color="#f065c2" style="background: #f065c2;">
+								<label> <input type="radio" name="avatarColor" value="10"> <span
+										style="background: #f065c2;"></span>
+								</label>
+							</div>
 
-                <div class="color-list">
+						</div>
 
-                    <div class="color-option" data-color="#ff6b6b" style="background:#ff6b6b;"></div>
-                    <div class="color-option" data-color="#ff944d" style="background:#ff944d;"></div>
-                    <div class="color-option" data-color="#ffd43b" style="background:#ffd43b;"></div>
-                    <div class="color-option" data-color="#a9e34b" style="background:#a9e34b;"></div>
-                    <div class="color-option" data-color="#69db7c" style="background:#69db7c;"></div>
-                    <div class="color-option" data-color="#38d9a9" style="background:#38d9a9;"></div>
-                    <div class="color-option" data-color="#66d9ff" style="background:#66d9ff;"></div>
-                    <div class="color-option" data-color="#5c7cfa" style="background:#5c7cfa;"></div>
-                    <div class="color-option" data-color="#9775fa" style="background:#9775fa;"></div>
-                    <div class="color-option" data-color="#f065c2" style="background:#f065c2;"></div>
+					</div>
+				</div>
 
-                </div>
+				<!-- 登録ボタン -->
+				<div class="form-row">
+					<button id="registerBtn" class="register-btn" data-url="${pageContext.request.contextPath}/SignUp">
+						登録する
+					</button>
+				</div>
 
-            </div>
-        </div>
+				<!-- 戻るボタン -->
+				<div class="back-area">
+					<a href="${pageContext.request.contextPath}/TitleCon" class="back-link"> ← 戻る </a>
+				</div>
 
-        <!-- 登録ボタン -->
-        <div class="form-row">
-            <button id="registerBtn" class="register-btn">
-                登録する
-            </button>
-        </div>
+			</div>
 
-        <!-- 戻るボタン -->
-        <div class="back-area">
-            <a href="menu.html" class="back-link">
-                ← 戻る
-            </a>
-        </div>
+			<script src="${pageContext.request.contextPath}/js/SignUp.js"></script>
 
-    </div>
+		</body>
 
-    <script src="${pageContext.request.contextPath}/js/SignUp.js"></script>
-
-</body>
-</html>
+		</html>
