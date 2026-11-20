@@ -1,117 +1,178 @@
-let targetPlayers = 1;
+/* ==========================================================
+   ・コントローラの読み取り、割り当て、選択人数の保持は gamepadAPI.js 側
+   ・このファイルは「画面の表示」と「ボタンの反応」を担当する
 
-// 1P～4Pに対応するGamepad番号を保存
-const players = [null, null, null, null];
+   HTML側の前提:
+     <script type="module" src="Member.js"></script> 
+   ========================================================== */
+"use strict"; //jsのモード
+import * as GP from "./gamepadAPI.js";
 
-// ボタン前回状態
-const padBtnBf = [false, false, false, false];
+/* ---- DOM要素宣言 ---- */
+const cntBtn = document.querySelectorAll(".count"); // 人数ボタン（count button）
+const plCords = document.querySelectorAll(".player"); // プレイヤーカード（player cards）
+const nxt = document.getElementById("nextBtn"); // 次へボタン
+const lst = document.getElementById("connectedPads"); // 接続一覧の表示先（無ければ null）
 
-function setPlayerCount(num) {
-  targetPlayers = num;
+/* ---- 変数・定数宣言 ---- */
+const BTN = 0; // 参加に使うボタン番号（0 = Aボタン）
+let lstH = ""; // 前回表示した一覧のHTML（変化したときだけ書き換えるため）
 
-  for (let i = 1; i <= 4; i++) {
-    document.getElementById(`player${i}`).style.display =
-      i <= num ? "block" : "none";
-  }
+/* ==========================================================
+   ■ 初期化
+   ========================================================== */
 
-  checkReady();
+function init() {
+  GP.rst(); // 全員の割り当てを消す
+  setPlCnt(GP.getTar()); // 保存済みの人数（無ければ初期値）で画面を整える
 }
 
-function registerPad(padIndex) {
-  // 既に参加済みなら無視
-  if (players.includes(padIndex)) return;
+/* ==========================================================
+   ■ 共通機能
+   ========================================================== */
 
-  const playerIndex = players.indexOf(null);
-
-  if (playerIndex === -1) return;
-
-  const pad = navigator.getGamepads()[padIndex];
-
-  players[playerIndex] = padIndex;
-
-  document.getElementById(`pad${playerIndex + 1}Img`).style.display = "block";
-
-  document.getElementById(`pad${playerIndex + 1}Text`).textContent = "参加完了";
-
-  document.getElementById(`pad${playerIndex + 1}Name`).textContent = pad.id;
-
-  checkReady();
+/* ----------------------------------------------------------
+   pEl(p, k): P（0始まり）のカード内の要素を返す
+   k は "Img" / "Text" / "Name"。例: pEl(0, "Img") → #pad1Img
+   ---------------------------------------------------------- */
+function pEl(p, k) {
+  return document.getElementById(`pad${p + 1}${k}`);
 }
 
-function checkReady() {
-  let joined = 0;
+/* ==========================================================
+   ■ 人数選択機能
+   ========================================================== */
 
-  for (let i = 0; i < targetPlayers; i++) {
-    if (players[i] !== null) {
-      joined++;
+/* ----------------------------------------------------------
+   setCnt(n): 選択人数を n にして、画面に反映する
+   ・gamepadAPI 側に人数を保存（範囲外ならここで終了）
+   ・人数を超えたカードは隠す
+   ・選んだ人数のボタンだけ .sel を付ける
+   ・次へボタンの有効/無効を再判定
+   ---------------------------------------------------------- */
+function setPlCnt(n) {
+  if (!GP.setTar(n)) return; // 1〜4 の整数以外は無視
+
+  plCords.forEach((d, i) => {
+    d.style.display = i < n ? "" : "none"; // "" は CSS 本来の表示に戻す
+  });
+  cntBtn.forEach((b) => {
+    b.classList.toggle("sel", Number(b.dataset.n) === n); // 選択中の見た目
+  });
+  ready();
+}
+
+/* ---- イベントリスナ ---- */
+// 人数ボタン: 押された data-n の数字で setCnt を呼ぶ（文字列→数値に変換）
+cntBtn.forEach((b) => {
+  b.addEventListener("click", () => setPlCnt(Number(b.dataset.n)));
+});
+
+/* ==========================================================
+   ■ 参加登録機能
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   join(idx): スロット idx のコントローラを、空いている最初のPに登録する
+   ・登録済みのコントローラなら何もしない
+   ・選択人数の範囲に空きが無ければ何もしない
+   ---------------------------------------------------------- */
+function join(idx) {
+  if (GP.who(idx) !== -1) return; // 既に参加済みなら無視
+
+  const p = GP.free(); // 選択人数の範囲での最初の空き P
+  if (p === -1) return; // 空き無し
+
+  GP.asg(p, idx); // 割り当てを記録（sessionStorage にも保存される）
+
+  // ---- ここから表示 ----
+  const g = GP.pad(p); // 割り当てた直後のコントローラ（抜けていれば null）
+  pEl(p, "Img").style.display = "block"; // 画像を表示
+  pEl(p, "Text").textContent = "参加完了"; // 文言を変える
+  pEl(p, "Name").textContent = g ? g.id : ""; // コントローラ名
+
+  ready();
+}
+
+/* ==========================================================
+   ■ 次へ判定機能
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   ready(): 選択人数ぶん全員のコントローラが「今つながっている」か調べて、
+   次へボタンの有効/無効を切り替える
+   ---------------------------------------------------------- */
+function ready() {
+  const n = GP.getTar(); // 選択人数
+  let ok = true; // 全員OKか
+  for (let i = 0; i < n; i++) {
+    if (!GP.live(i)) {
+      ok = false; // 1人でも未参加/切断なら NG
+      break;
     }
   }
-
-  document.getElementById("nextBtn").disabled = joined < targetPlayers;
+  nxt.disabled = !ok; // 全員OKなら押せる
 }
 
-function showConnectedPads() {
-  const pads = navigator.getGamepads();
+/* ==========================================================
+   ■ 接続一覧表示機能（確認用）
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   showL(pads): 今つながっているコントローラの一覧を表示する
+   ・内容が前回と同じなら書き換えない（毎フレームの無駄な更新を避ける）
+   ---------------------------------------------------------- */
+function showL(pads) {
+  if (!lst) return; // 表示先が無ければ何もしない
 
   let html = "<h2>接続中のコントローラー</h2>";
+  let cnt = 0; // つながっている台数
+  pads.forEach((g, i) => {
+    if (!g) return; // 空きスロットは飛ばす
+    cnt++;
+    html += `<div>Slot ${i}<br>${g.id}</div><br>`;
+  });
+  if (cnt === 0) html += "接続されていません";
 
-  let count = 0;
-
-  for (let i = 0; i < pads.length; i++) {
-    if (!pads[i]) continue;
-
-    count++;
-
-    html += `
-            <div>
-                Slot ${i}<br>
-                ${pads[i].id}
-            </div>
-            <br>
-        `;
-  }
-
-  if (count === 0) {
-    html += "接続されていません";
-  }
-
-  document.getElementById("connectedPads").innerHTML = html;
+  if (html === lstH) return; // 前回と同じなら更新しない
+  lstH = html;
+  lst.innerHTML = html;
 }
 
-function updatePads() {
-  const pads = navigator.getGamepads();
-
-  for (let i = 0; i < 4; i++) {
-    const pad = pads[i];
-
-    if (!pad) {
-      padBtnBf[i] = false;
-      continue;
-    }
-
-    // Aボタン
-    const btnNow = pad.buttons[0].pressed;
-
-    // 押した瞬間だけ参加
-    if (btnNow && !padBtnBf[i]) {
-      registerPad(i);
-    }
-
-    padBtnBf[i] = btnNow;
-  }
-
-  showConnectedPads();
-
-  requestAnimationFrame(updatePads);
-}
-
+/* ---- イベントリスナ ---- */
 window.addEventListener("gamepadconnected", (e) => {
   console.log("接続:", e.gamepad.id);
 });
-
 window.addEventListener("gamepaddisconnected", (e) => {
   console.log("切断:", e.gamepad.id);
 });
 
-setPlayerCount(1);
-updatePads();
+/* ==========================================================
+   ■ 監視ループ機能
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   loop(): 毎フレーム呼ばれる
+   1. コントローラを読む（フレームの頭で1回だけ）
+   2. Aボタンを押した瞬間のコントローラを参加登録
+   3. 一覧と次へボタンを更新
+   4. 次のフレームでもう一度 loop を呼ぶ
+   ---------------------------------------------------------- */
+function loop() {
+  const pads = GP.poll(); // 1. 読む（押した瞬間の判定もここで更新される）
+
+  for (let i = 0; i < GP.MAX; i++) {
+    if (GP.dn(i, BTN)) join(i); // 2. Aを押した瞬間なら参加
+  }
+
+  showL(pads); // 3. 一覧
+  ready(); //    次へ（抜き差しも拾う）
+
+  requestAnimationFrame(loop); // 4. 次のフレームへ
+}
+
+/* ==========================================================
+   ■ 起動（必ず最後に書く）
+   ========================================================== */
+init();
+loop();

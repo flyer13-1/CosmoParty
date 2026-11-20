@@ -3,91 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="js/gamepadAPI.js"></script>
-    <script defer src="js/Member.js"></script>
+    <link rel="stylesheet" href="css\Member.css" />
+    <script defer type="module" src="js/gamepadAPI.js"></script>
+    <script defer type="module" src="js/Member.js"></script>
     <title>人数選択</title>
-
-    <style>
-      body {
-        text-align: center;
-        font-family: sans-serif;
-      }
-
-      #players {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-      }
-
-      .player {
-        width: 180px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 10px;
-      }
-
-      .player img {
-        width: 100px;
-        display: none;
-      }
-
-      .name {
-        font-size: 12px;
-        word-break: break-all;
-        color: #666;
-      }
-
-      #connectedPads {
-        margin-top: 20px;
-      }
-    </style>
   </head>
   <body>
-    <h1>人数選択</h1>
+    <header>
+      <h1>人数選択</h1>
+      <ul>
+        <li><button class="count" data-n="1">1人</button></li>
+        <li><button class="count" data-n="2">2人</button></li>
+        <li><button class="count" data-n="3">3人</button></li>
+        <li><button class="count" data-n="4">4人</button></li>
+      </ul>
+    </header>
+    <main>
+      <article>
+        <!-- jsは表示・非表示のみ-->
+        <section id="conectPlace">
+          <div class="player" data-n="1">
+            <h3>1P</h3>
+            <img id="pad1Img" src="img/hello.png" />
+            <p id="pad1Text">Aボタンで参加</p>
+            <div id="pad1Name" class="name"></div>
+          </div>
 
-    <button onclick="setPlayerCount(1)">1人</button>
-    <button onclick="setPlayerCount(2)">2人</button>
-    <button onclick="setPlayerCount(3)">3人</button>
-    <button onclick="setPlayerCount(4)">4人</button>
+          <div class="player" data-n="2" style="display: none">
+            <h3>2P</h3>
+            <img id="pad2Img" src="img/hello.png" />
+            <p id="pad2Text">Aボタンで参加</p>
+            <div id="pad2 Name" class="name"></div>
+          </div>
 
-    <br /><br />
+          <div class="player" data-n="3" style="display: none">
+            <h3>3P</h3>
+            <img id="pad3Img" src="img/hello.png" />
+            <p id="pad3Text">Aボタンで参加</p>
+            <div id="pad3Name" class="name"></div>
+          </div>
 
-    <div id="players">
-      <div class="player" id="player1">
-        <h3>1P</h3>
-        <img id="pad1Img" src="img/hello.png" />
-        <p id="pad1Text">Aボタンで参加</p>
-        <div id="pad1Name" class="name"></div>
-      </div>
+          <div class="player" data-n="4" style="display: none">
+            <h3>4P</h3>
+            <img id="pad4Img" src="img/hello.png" />
+            <p id="pad4Text">Aボタンで参加</p>
+            <div id="pad4Name" class="name"></div>
+          </div>
+        </section>
 
-      <div class="player" id="player2">
-        <h3>2P</h3>
-        <img id="pad2Img" src="img/hello.png" />
-        <p id="pad2Text">Aボタンで参加</p>
-        <div id="pad2Name" class="name"></div>
-      </div>
+        <section id="conectPad"></section>
+      </article>
 
-      <div class="player" id="player3">
-        <h3>3P</h3>
-        <img id="pad3Img" src="img/hello.png" />
-        <p id="pad3Text">Aボタンで参加</p>
-        <div id="pad3Name" class="name"></div>
-      </div>
-
-      <div class="player" id="player4">
-        <h3>4P</h3>
-        <img id="pad4Img" src="img/hello.png" />
-        <p id="pad4Text">Aボタンで参加</p>
-        <div id="pad4Name" class="name"></div>
-      </div>
-    </div>
-
-    <div id="connectedPads"></div>
-
-    <br />
-
-    <button onclick="history.back()">戻る</button>
-    <button id="nextBtn" disabled>次へ</button>
+      <button onclick="history.back()">戻る</button>
+      <button id="nextBtn" disabled>次へ</button>
+    </main>
   </body>
 </html>
