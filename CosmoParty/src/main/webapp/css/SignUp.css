@@ -1,3 +1,11 @@
+/* ================================
+   全体
+================================ */
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -6,126 +14,252 @@ body {
     justify-content: center;
     align-items: center;
 
-    font-family: "Yu Gothic", sans-serif;
+    background-color: #1c1e3b;
 
-    /* 仮背景 */
-    background-color: #1B1E4B;
+    font-family:
+        "Noto Sans JP",
+        "Meiryo",
+        sans-serif;
 
-    /* 後で画像を入れるための設定 */
-    /*background-image: url("images/background.jpg");*/
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* 登録画面 */
-.register-container {
-    width: 500px;
     color: white;
 }
 
-/* タイトル */
+/* ================================
+   タイトル
+================================ */
+
 h1 {
+    margin: 0 0 20px;
+
     text-align: center;
-    margin-bottom: 40px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: #f5f5ff;
 }
 
-/* 各行 */
-.form-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 25px;
+
+/* ================================
+   入力項目
+================================ */
+
+.form-group {
+    margin-bottom: 12px;
 }
 
-/* 入力エリア */
-.input-area {
-    flex: 1;
-}
-
-/* ラベル */
-label {
+.form-group > label {
     display: block;
-    text-align: center;
-    margin-bottom: 10px;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+    color: #a5a8c3;
 }
 
-/* 入力欄 */
-input {
+
+/* テキスト・パスワード入力 */
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    display: block;
+
     width: 100%;
-    box-sizing: border-box;
+    height: 40px;
 
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
+    padding: 10px;
 
-    font-size: 16px;
+    border: 1px solid #c5c5d5;
+    border-radius: 7px;
+
+    background-color: #f5f5ff;
+
+    font-size: 14px;
+    color: #1c1e3b;
+
+    outline: none;
 }
 
-input[type="radio"] {
-    display: none;
+
+/* フォーカス時 */
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border: 2px solid #f45b70;
 }
 
-/* カラー選択 */
+
+/* ================================
+   アバターカラー
+================================ */
+
+.color-group {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
 .color-list {
     display: flex;
-    justify-content: center;
+
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+
+    gap: 8px;
+
+    width: 100%;
+
     margin-top: 10px;
 }
 
+
+/* ラジオボタンを囲むラベル */
+
 .color-option {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
     width: 35px;
     height: 35px;
-    border-radius: 50%;
+
+    flex-shrink: 0;
+
+    margin: 0;
+
     cursor: pointer;
 }
 
+
+/* ラジオボタン本体を非表示 */
+
+.color-option input[type="radio"] {
+    display: none;
+}
+
+
+/* カラーの丸 */
+
+.color-circle {
+    display: block;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+
+    background-color: var(--avatar-color);
+
+    border: 3px solid transparent;
+
+    transition:
+        transform 0.2s,
+        border 0.2s;
+}
+
+
 /* 選択時 */
-.color-option.selected {
-    border: 4px solid white;
+
+.color-option input[type="radio"]:checked
++ .color-circle {
+    border: 3px solid white;
+
     transform: scale(1.15);
 }
 
-/* 登録ボタン */
+
+/* カーソルを合わせたとき */
+
+.color-option:hover .color-circle {
+    transform: scale(1.1);
+}
+
+
+/* 選択時の拡大を維持 */
+
+.color-option input[type="radio"]:checked
++ .color-circle:hover {
+    transform: scale(1.15);
+}
+
+
+/* ================================
+   エラーメッセージ
+================================ */
+
+.error-message {
+    min-height: 0;
+
+    margin: 4px 0 0;
+
+    font-size: 12px;
+    color: #ff626c;
+}
+
+
+/* ================================
+   登録ボタン
+================================ */
+
 .register-btn {
+    display: block;
+
     width: 100%;
-    padding: 15px;
+    height: 42px;
+
+    margin-top: 10px;
 
     border: none;
-    border-radius: 8px;
+    border-radius: 7px;
 
-    background: #ff6677;
+    background-color: #f45b70;
+
     color: white;
 
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
 
     cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.1s;
 }
 
-/* エラーメッセージ */
-.error-message {
-    color: red;
-    font-size: 14px;
-    margin-left: 10px;
+
+/* ホバー時 */
+
+.register-btn:hover {
+    background-color: #ff7486;
 }
 
-/* ラベルとエラーを横並び */
-.label-line {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
+
+/* 押下時 */
+
+.register-btn:active {
+    transform: scale(0.98);
 }
 
-/* 戻る */
-.back-area {
-    margin-top: 20px;
-}
+
+/* ================================
+   戻るリンク
+================================ */
 
 .back-link {
-    color: white;
+    display: inline-block;
+
+    margin-top: 15px;
+
+    color: #a5a8c3;
+
+    font-size: 13px;
+
     text-decoration: none;
+}
+
+
+/* ホバー時 */
+
+.back-link:hover {
+    color: white;
 }

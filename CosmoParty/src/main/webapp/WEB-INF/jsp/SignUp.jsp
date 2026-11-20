@@ -1,139 +1,280 @@
-<%-- 文字コードをUTF-8にする --%>
-	<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-		<!DOCTYPE html>
-		<html lang="ja">
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>プレイヤー登録</title>
+	<!DOCTYPE html>
+	<html lang="ja">
 
-			<link rel="stylesheet" href="${pageContext.request.contextPath}/css/SignUp.css">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-			<style>
-				input[type="radio"] {
-					display: none;
-				}
-			</style>
-		</head>
+		<title>プレイヤー登録</title>
 
-		<body>
+		<!--    <link rel="stylesheet"-->
+		<!--          href="${pageContext.request.contextPath}/css/SignUp.css">-->
+		<style>
+			/* ================================
+   全体
+================================ */
+			* {
+				box-sizing: border-box;
+			}
 
-			<div class="register-container">
+			body {
+				margin: 0;
+				min-height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #1c1e3b;
+				font-family: "Noto Sans JP", "Meiryo", sans-serif;
+				color: white;
+			}
 
-				<h1>プレイヤー登録</h1>
 
-				<!-- プレイヤー名 -->
-				<div class="form-row">
-					<div class="input-area">
-						<label for="playerName">プレイヤー名</label> <input type="text" id="playerName" placeholder="name">
-						<span class="error-message" id="nameError"></span>
-					</div>
+
+			/* ================================
+   タイトル
+================================ */
+			h1 {
+				margin: 0 0 20px;
+				text-align: center;
+				font-size: 24px;
+				font-weight: bold;
+				color: #f5f5ff;
+			}
+
+			/* ================================
+   入力項目
+================================ */
+			.form-group {
+				margin-bottom: 12px;
+			}
+
+			.form-group>label {
+				display: block;
+				margin-bottom: 5px;
+				font-size: 13px;
+				color: #a5a8c3;
+			}
+
+			/* テキスト・パスワード入力 */
+			.form-group input[type="text"],
+			.form-group input[type="password"] {
+				display: block;
+				width: 100%;
+				height: 40px;
+				padding: 10px;
+				border: 1px solid #c5c5d5;
+				border-radius: 7px;
+				background-color: #f5f5ff;
+				font-size: 14px;
+				color: #1c1e3b;
+				outline: none;
+			}
+
+			/* フォーカス時 */
+			.form-group input[type="text"]:focus,
+			.form-group input[type="password"]:focus {
+				border: 2px solid #f45b70;
+			}
+
+			/* ================================
+   アバターカラー
+================================ */
+			.color-group {
+				margin-top: 15px;
+				margin-bottom: 20px;
+			}
+
+			.color-list {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 8px;
+				width: 100%;
+				margin-top: 10px;
+			}
+
+			/* ラジオボタンを囲むラベル */
+			.color-option {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 35px;
+				height: 35px;
+				flex-shrink: 0;
+				margin: 0;
+				cursor: pointer;
+			}
+
+			/* ラジオボタン本体を非表示 */
+			.color-option input[type="radio"] {
+				display: none;
+			}
+
+			/* カラーの丸 */
+			.color-circle {
+				display: block;
+				width: 35px;
+				height: 35px;
+				border-radius: 50%;
+				background-color: var(--avatar-color);
+				border: 3px solid transparent;
+				transition: transform 0.2s, border 0.2s;
+			}
+
+			/* 選択時 */
+			.color-option input[type="radio"]:checked+.color-circle {
+				border: 3px solid white;
+				transform: scale(1.15);
+			}
+
+			/* カーソルを合わせたとき */
+			.color-option:hover .color-circle {
+				transform: scale(1.1);
+			}
+
+			/* 選択時の拡大を維持 */
+			.color-option input[type="radio"]:checked+.color-circle:hover {
+				transform: scale(1.15);
+			}
+
+			/* ================================
+   エラーメッセージ
+================================ */
+			.error-message {
+				min-height: 0;
+				margin: 4px 0 0;
+				font-size: 12px;
+				color: #ff626c;
+			}
+
+			/* ================================
+   登録ボタン
+================================ */
+			.register-btn {
+				display: block;
+				width: 100%;
+				height: 42px;
+				margin-top: 10px;
+				border: none;
+				border-radius: 7px;
+				background-color: #f45b70;
+				color: white;
+				font-size: 16px;
+				font-weight: bold;
+				cursor: pointer;
+				transition: background-color 0.2s, transform 0.1s;
+			}
+
+			/* ホバー時 */
+			.register-btn:hover {
+				background-color: #ff7486;
+			}
+
+			/* 押下時 */
+			.register-btn:active {
+				transform: scale(0.98);
+			}
+
+			/* ================================
+   戻るリンク
+================================ */
+			.back-link {
+				display: inline-block;
+				margin-top: 15px;
+				color: #a5a8c3;
+				font-size: 13px;
+				text-decoration: none;
+			}
+
+			/* ホバー時 */
+			.back-link:hover {
+				color: white;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<main class="register-container">
+
+			<h1>プレイヤー登録</h1>
+
+			<!-- プレイヤー名 -->
+			<div class="form-group">
+				<label for="playerName">プレイヤー名</label> <input type="text" id="playerName" placeholder="name"
+					maxlength="20" autocomplete="off">
+
+				<p id="nameError" class="error-message"></p>
+			</div>
+
+			<!-- パスワード -->
+			<div class="form-group">
+				<label for="password">パスワード</label> <input type="password" id="password" placeholder="●●●●●●"
+					autocomplete="new-password">
+
+				<p id="passwordError" class="error-message"></p>
+			</div>
+
+			<!-- パスワード再入力 -->
+			<div class="form-group">
+				<label for="confirmPassword"> パスワード（再度入力） </label> <input type="password" id="confirmPassword"
+					placeholder="●●●●●●" autocomplete="new-password">
+
+				<p id="passwordMatchError" class="error-message"></p>
+			</div>
+
+			<!-- アバターカラー -->
+			<div class="form-group color-group">
+
+				<label>アバターカラー</label>
+
+				<div class="color-list">
+
+					<label class="color-option"> <input type="radio" name="avatarColor" value="1"> <span
+							class="color-circle" style="--avatar-color: #ff626c;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="2"> <span
+							class="color-circle" style="--avatar-color: #ff914d;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="3"> <span
+							class="color-circle" style="--avatar-color: #ffd43b;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="4"> <span
+							class="color-circle" style="--avatar-color: #a9e34b;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="5"> <span
+							class="color-circle" style="--avatar-color: #69db7c;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="6"> <span
+							class="color-circle" style="--avatar-color: #38d9a9;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="7"> <span
+							class="color-circle" style="--avatar-color: #66d9ff;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="8"> <span
+							class="color-circle" style="--avatar-color: #5c7cfa;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="9"> <span
+							class="color-circle" style="--avatar-color: #9775fa;"></span>
+					</label> <label class="color-option"> <input type="radio" name="avatarColor" value="10"> <span
+							class="color-circle" style="--avatar-color: #f065c2;"></span>
+					</label>
+
 				</div>
 
-				<!-- パスワード -->
-				<div class="form-row">
-					<div class="input-area">
-						<label for="password">パスワード</label> <input type="password" id="password" placeholder="••••••">
-						<span class="error-message" id="passwordError"></span>
-					</div>
-				</div>
-
-				<!-- パスワード再入力 -->
-				<div class="form-row">
-					<div class="input-area">
-
-						<label for="confirmPassword"> パスワード（再度入力） </label> <input type="password" id="confirmPassword"
-							placeholder="••••••">
-
-						<span class="error-message" id="passwordMatchError"> </span>
-
-					</div>
-				</div>
-
-				<!-- アバターカラー -->
-				<div class="form-row">
-					<div class="input-area">
-
-						<div class="label-line">
-							<label>アバターカラー</label> <span class="error-message" id="colorError">
-							</span>
-						</div>
-
-						<div class="color-list">
-
-							<div class="color-option" data-color="#ff6b6b" style="background: #ff6b6b;">
-								<label class="a"> <input type="radio" name="avatarColor" value="01"> <span
-										style="background: #ff6b6b;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#ff944d" style="background: #ff944d;">
-								<label> <input type="radio" name="avatarColor" value="02"> <span
-										style="background: #ff944d;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#ffd43b" style="background: #ffd43b;">
-								<label> <input type="radio" name="avatarColor" value="03"> <span
-										style="background: #ffd43b;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#a9e34b" style="background: #a9e34b;">
-								<label> <input type="radio" name="avatarColor" value="04"> <span
-										style="background: #a9e34b;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#69db7c" style="background: #69db7c;">
-								<label> <input type="radio" name="avatarColor" value="05"> <span
-										style="background: #69db7c;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#38d9a9" style="background: #38d9a9;">
-								<label> <input type="radio" name="avatarColor" value="06"> <span
-										style="background: #38d9a9;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#66d9ff" style="background: #66d9ff;">
-								<label> <input type="radio" name="avatarColor" value="07"> <span
-										style="background: #66d9ff;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#5c7cfa" style="background: #5c7cfa;">
-								<label> <input type="radio" name="avatarColor" value="08"> <span
-										style="background: #5c7cfa;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#9775fa" style="background: #9775fa;">
-								<label> <input type="radio" name="avatarColor" value="09"> <span
-										style="background: #9775fa;"></span>
-								</label>
-							</div>
-							<div class="color-option" data-color="#f065c2" style="background: #f065c2;">
-								<label> <input type="radio" name="avatarColor" value="10"> <span
-										style="background: #f065c2;"></span>
-								</label>
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<!-- 登録ボタン -->
-				<div class="form-row">
-					<button id="registerBtn" class="register-btn" data-url="${pageContext.request.contextPath}/SignUp">
-						登録する
-					</button>
-				</div>
-
-				<!-- 戻るボタン -->
-				<div class="back-area">
-					<a href="${pageContext.request.contextPath}/TitleCon" class="back-link"> ← 戻る </a>
-				</div>
+				<p id="colorError" class="error-message"></p>
 
 			</div>
 
-			<script src="${pageContext.request.contextPath}/js/SignUp.js"></script>
+			<!-- 登録ボタン -->
+			<div class="form-row">
+				<button id="registerBtn" class="register-btn"
+					data-url="${pageContext.request.contextPath}/SignUp">登録する</button>
+			</div>
 
-		</body>
+			<!-- 戻るボタン -->
+			<div class="back-area">
+				<a href="${pageContext.request.contextPath}/TitleCon" class="back-link"> ← 戻る </a>
+			</div>
 
-		</html>
+		</main>
+
+		<script src="${pageContext.request.contextPath}/js/SignUp.js"></script>
+
+	</body>
+
+	</html>

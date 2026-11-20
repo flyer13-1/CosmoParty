@@ -20,7 +20,5 @@ public class SignUp extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(forwardPath);
 		dispatcher.forward(request, response);
 	}
-	
-    }
 
 }
