@@ -2,6 +2,7 @@ package Servret;
 
 import java.io.IOException;
 
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,7 +21,5 @@ public class SignUp extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(forwardPath);
 		dispatcher.forward(request, response);
 	}
-	
-    }
 
 }

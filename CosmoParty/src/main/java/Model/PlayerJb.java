@@ -1,6 +1,6 @@
 package Model;
 
-public class Player {
+public class PlayerJb{
 	
 	private String name;
 	private String pass;

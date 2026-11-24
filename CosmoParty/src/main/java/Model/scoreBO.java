@@ -1,6 +1,6 @@
 package Model;
 
-public class scoreLogic {
+public class scoreBO {
 	protected void rk() {
 		
 		

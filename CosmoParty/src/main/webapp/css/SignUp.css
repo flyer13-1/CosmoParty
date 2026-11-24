@@ -1,0 +1,303 @@
+/* ================================
+   全体
+================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #1c1e3b;
+
+    font-family:
+        "Noto Sans JP",
+        "Meiryo",
+        sans-serif;
+
+    color: white;
+}
+
+/* ================================
+   タイトル
+================================ */
+
+h1 {
+    margin: 0 0 20px;
+
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: #f5f5ff;
+}
+
+
+/* ================================
+   入力項目
+================================ */
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group > label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+    color: #a5a8c3;
+}
+
+
+/* テキスト・パスワード入力 */
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    display: block;
+
+    width: 100%;
+    height: 40px;
+
+    padding: 10px;
+
+    border: 1px solid #c5c5d5;
+    border-radius: 7px;
+
+    background-color: #f5f5ff;
+
+    font-size: 14px;
+    color: #1c1e3b;
+
+    outline: none;
+}
+
+
+/* フォーカス時 */
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border: 2px solid #f45b70;
+}
+
+
+/* ================================
+   アバターカラー
+================================ */
+
+.color-group {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.color-list {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    margin-top: 10px;
+}
+
+
+/* ラジオボタンを囲むラベル */
+
+.color-option {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+/* ラジオボタン本体を非表示 */
+
+.color-option input[type="radio"] {
+    display: none;
+}
+
+
+/* カラーの丸 */
+
+.color-circle {
+    display: block;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+
+    background-color: var(--avatar-color);
+
+    border: 3px solid transparent;
+
+    transition:
+        transform 0.2s,
+        border 0.2s;
+}
+
+
+/* 選択時 */
+
+.color-option input[type="radio"]:checked
++ .color-circle {
+    border: 3px solid white;
+
+    transform: scale(1.15);
+}
+
+
+/* カーソルを合わせたとき */
+
+.color-option:hover .color-circle {
+    transform: scale(1.1);
+}
+
+
+/* 選択時の拡大を維持 */
+
+.color-option input[type="radio"]:checked
++ .color-circle:hover {
+    transform: scale(1.15);
+}
+
+
+/* ================================
+   エラーメッセージ
+================================ */
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 5px;
+    min-height: 18px;
+    display: block;
+}
+
+
+/* ================================
+   登録ボタン
+================================ */
+
+.register-btn {
+    display: block;
+
+    width: 100%;
+    height: 42px;
+
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: #f45b70;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        transform 0.1s;
+}
+
+
+/* ホバー時 */
+
+.register-btn:hover {
+    background-color: #ff7486;
+}
+
+
+/* 押下時 */
+
+.register-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* ================================
+   戻るリンク
+================================ */
+
+.back-link {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    color: #a5a8c3;
+
+    font-size: 13px;
+
+    text-decoration: none;
+}
+
+
+/* ホバー時 */
+
+.back-link:hover {
+    color: white;
+}
+
+/* ==================================
+   全体レイアウト
+================================== */
+
+.page-layout{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:120px;
+}
+
+/* ==================================
+   キャラクター表示
+================================== */
+
+.character-area{
+    width:350px;
+    height:500px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.character-area img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+}
+
+/* ==================================
+   フォーム幅
+================================== */
+
+.register-container{
+    width:450px;
+}

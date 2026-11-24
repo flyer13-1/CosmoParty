@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Model.Score;
+import Model.ScoreJb;
 
-public class score extends base {
+public class scoreDAO extends base {
 
-	protected boolean insert(Score score) {
+	protected boolean insert(ScoreJb score) {
 		boolean success = false;
 
 		try {
@@ -57,8 +57,8 @@ public class score extends base {
 		return success;
 	}
 
-	protected ArrayList<Score> find() {
-		ArrayList<Score> result =new  ArrayList<Score>();
+	protected ArrayList<ScoreJb> find() {
+		ArrayList<ScoreJb> result =new  ArrayList<ScoreJb>();
 
 		try {
 			connect();
@@ -106,7 +106,7 @@ public class score extends base {
 
 			// ランキングは複数行返るので while で全行を回す (if だと1行しか読めない)
 			while (rs.next()) {
-				Score sc = new Score();                          // 1行 = 1Bean
+				ScoreJb sc = new ScoreJb();                          // 1行 = 1Bean
 
 				sc.setGameId(rs.getInt("gid"));                  // ゲームID (SQLの g.id AS gid)
 				sc.setLvId(rs.getInt("lid"));                    // 難易度ID (SQLの l.id AS lid)

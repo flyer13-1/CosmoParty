@@ -1,6 +1,6 @@
 package Model;
 
-public class Lv {
+public class LvJb {
 	private int id;
 	private String name;
 	

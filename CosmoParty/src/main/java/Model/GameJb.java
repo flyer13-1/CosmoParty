@@ -1,6 +1,6 @@
 package Model;
 
-public class Game {
+public class GameJb{
 	private int id;
 	private String name;
 	

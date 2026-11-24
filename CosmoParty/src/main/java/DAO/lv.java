@@ -5,13 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Model.Lv;
+import Model.LvJb;
 
 
 public class lv extends base{
 
-	protected ArrayList<Lv> find() {
-		ArrayList<Lv> list = new ArrayList<Lv>();
+	protected ArrayList<LvJb> find() {
+		ArrayList<LvJb> list = new ArrayList<LvJb>();
 
 		try {
 			connect();
@@ -26,7 +26,7 @@ public class lv extends base{
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				Lv lv = new Lv();
+				LvJb lv = new LvJb();
 				lv.setId(rs.getInt("id"));
 				lv.setName(rs.getString("name"));
 				

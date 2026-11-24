@@ -4,12 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import Model.Player;
+import Model.PlayerJb;
 
 public class player extends base{
 
 	//アカウント登録
-	protected boolean insert(Player player) {
+	protected boolean insert(PlayerJb player) {
 		boolean success =false;
 		
 		try {
@@ -57,8 +57,8 @@ public class player extends base{
 	}
 	
 	//アカウント検索
-	protected Player find(Player player) {
-		Player result = null;
+	protected PlayerJb find(PlayerJb player) {
+		PlayerJb result = null;
 
 		try {
 			connect();
@@ -77,7 +77,7 @@ public class player extends base{
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				result=new Player();
+				result=new PlayerJb();
 				
 				result.setName(rs.getString("name"));
 				result.setColor(rs.getInt("color"));
