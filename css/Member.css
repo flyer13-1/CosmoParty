@@ -1,0 +1,196 @@
+/* ==========================================================
+   Member.css  人数選択画面（画面003のラフに合わせた見た目）
+   ・画面は 16:9 固定。ウィンドウの大きさが変わっても、全体が相似形で拡縮する
+   ・サイズは rem で指定する。1rem = 画面(16:9)の横幅の 1%
+     （html の font-size で決めている。例: 2.6rem = 横幅の 2.6%）
+   ・HTML側の前提（Member.js が触る名前）
+       .count / .count.sel … 人数ボタン / 選択中（赤枠）
+       #connectPlace … プレイヤーカードの並び
+       .player … プレイヤーカード（中に h3, img, p, .name。情報はここに集める）
+       #connectPad … 入力確認ラインの並び（ボタンだけ）
+       .keys / .key / .key.on … 入力確認（JSが #connectPad の中に各P分を作る）
+       #nextBtn … 参加人数を確定（disabled のとき薄く表示）
+   ========================================================== */
+
+/* ---- 色などの共通値（ここだけ変えれば全体が変わる） ---- */
+:root {
+  --bg: #0f2a44; /* 画面の紺色（ラフの背景） */
+  --crd: #000; /* プレイヤーカードの黒 */
+  --org: #f08030; /* 「1P」などのオレンジ文字 */
+  --red: #e53935; /* 選択中の枠線（ラフ指定: 選択時は赤） */
+  --mut: #9aa7b4; /* 補助的なグレー（カード枠・説明文） */
+  --yel: #ffd54f; /* 入力確認で光ったときの色 / フォーカス表示 */
+}
+
+/* ---- 16:9 の画面を中央に置く ---- */
+html {
+  /* 1rem を「横幅の1%」か「高さ×16/9 の1%」の小さい方にする → はみ出さない */
+  font-size: min(1vw, calc(100vh * 16 / 9 / 100));
+  height: 100%;
+  background: #000; /* 16:9 の外側（余白）は黒 */
+  display: grid;
+  place-items: center; /* body を上下左右の中央へ */
+}
+
+body {
+  box-sizing: border-box;
+  position: relative; /* 戻る/次へ/接続一覧を、この画面の中で絶対配置する基準 */
+  width: 100rem; /* 16 : 9 */
+  height: 56.25rem;
+  margin: 0;
+  overflow: hidden; /* 画面の外にはみ出した分は隠す */
+  background: var(--bg);
+  color: #fff;
+  font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+/* ---- 上段: 「人数選択」と人数ボタン（ラフの① ） ---- */
+header {
+  display: flex;
+  align-items: center; /* 見出しとボタンの高さをそろえる */
+  gap: 2.4rem;
+  padding: 3rem 4rem 0;
+}
+h1 {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+header ul {
+  display: flex;
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none; /* 「・」を消す */
+}
+
+/* 人数ボタン（白い四角） */
+.count {
+  width: 6rem;
+  height: 4.4rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #123;
+  background: #fff;
+  border: 0.35rem solid transparent; /* 通常時は透明（枠の幅だけ確保してズレ防止） */
+  border-radius: 0.7rem;
+  cursor: pointer;
+}
+/* 選択中は枠線を赤にする（ラフのルール） */
+.count.sel {
+  border-color: var(--red);
+}
+
+/* ---- 中段: プレイヤーカード（ラフの②③ ） ---- */
+#connectPlace {
+  display: flex;
+  justify-content: center; /* 人数が少ないときは中央に寄せる */
+  gap: 1.6rem;
+  padding: 3rem 4rem 0;
+}
+
+.player {
+  box-sizing: border-box;
+  width: 21.5rem;
+  min-height: 26rem;
+  padding: 1.4rem 1rem;
+  background: var(--crd);
+  border: 0.15rem solid var(--mut);
+  border-radius: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+.player h3 {
+  margin: 0;
+  color: var(--org); /* 「1P」はオレンジ */
+  font-size: 3.2rem;
+}
+.player img {
+  display: none; /* 参加するまで隠す（JS が参加時に block にする） */
+  width: 8rem;
+  height: auto;
+}
+.player p {
+  margin: 0;
+  font-size: 1.6rem;
+}
+/* コントローラ名（JS が参加時に入れる） */
+.name {
+  min-height: 2.6rem; /* 空のときも高さを確保して、カードがガタつかないようにする */
+  font-size: 1.1rem;
+  color: var(--mut);
+  word-break: break-all; /* 長い機種名を折り返す */
+}
+
+/* ---- 下段: 入力確認ラインの並び（ボタンだけ。JSが各P分を作る） ----
+   #connectPlace と同じ指定（同じ幅・同じ間隔・中央寄せ）にして、
+   カードの真下にボタンがそろうようにする */
+#connectPad {
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: 2rem 4rem 0;
+}
+
+/* ---- 入力確認（上下左右・ABXY） ----
+   .keys = 1Pぶんの区切り。.player と同じ幅にして、4列×2行で並べる */
+.keys {
+  box-sizing: border-box;
+  width: 21.5rem; /* .player と同じ幅（ここを変えるときは .player も合わせる） */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+.key {
+  padding: 0.45rem 0;
+  font-size: 1.6rem;
+  border: 0.1rem solid var(--mut);
+  border-radius: 0.4rem;
+  opacity: 0.3; /* 押していないときは暗い */
+}
+.key.on {
+  opacity: 1; /* 押している間は明るい */
+  color: #000;
+  background: var(--yel);
+  border-color: var(--yel);
+}
+
+/* ---- 戻る（左下） / 参加人数を確定（右下）（ラフの④⑤ ） ----
+   位置の基準は body（position: relative）。main の中にあれば階層は問わない */
+main button {
+  position: absolute;
+  bottom: 3rem;
+  width: 11rem;
+  height: 4.6rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #123;
+  background: #fff;
+  border: 0;
+  border-radius: 0.7rem;
+  cursor: pointer;
+}
+main button:not(#nextBtn) {
+  left: 4rem; /* 戻る */
+}
+#nextBtn {
+  right: 4rem; /* 参加人数を確定 */
+  width: 20rem; /* 文字数が多いので、戻るより広くとる */
+}
+/* 確定が押せないとき（全員そろっていない）は薄く表示 */
+main button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ---- キーボード操作時のフォーカス表示 ---- */
+.count:focus-visible,
+main button:focus-visible {
+  outline: 0.3rem solid var(--yel);
+  outline-offset: 0.2rem;
+}

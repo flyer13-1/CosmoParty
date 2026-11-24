@@ -1,29 +1,39 @@
 /* ==========================================================
    ・コントローラの読み取り、割り当て、選択人数の保持は gamepadAPI.js 側
    ・このファイルは「画面の表示」と「ボタンの反応」を担当する
-
-   HTML側の前提:
-     <script type="module" src="Member.js"></script> 
+   ※ 入力確認の枠（上下左右・ABXY）は、JSが #connectPad の中に各P分を作る。
+     HTMLには書かない。コントローラ名などの情報は .player 側にまとめる
    ========================================================== */
 "use strict"; //jsのモード
 import * as GP from "./gamepadAPI.js";
 
+/* ==========================================================
+   ■ 要素の宣言
+   ========================================================== */
+
 /* ---- DOM要素宣言 ---- */
 const cntBtn = document.querySelectorAll(".count"); // 人数ボタン（count button）
 const plCords = document.querySelectorAll(".player"); // プレイヤーカード（player cards）
-const nxt = document.getElementById("nextBtn"); // 次へボタン
-const lst = document.getElementById("connectedPads"); // 接続一覧の表示先（無ければ null）
+const nxt = document.getElementById("nextBtn"); // 「参加人数を確定」ボタン
+const padLn = document.getElementById("connectPad"); // 入力確認ラインの置き場所
 
 /* ---- 変数・定数宣言 ---- */
 const BTN = 0; // 参加に使うボタン番号（0 = Aボタン）
-let lstH = ""; // 前回表示した一覧のHTML（変化したときだけ書き換えるため）
 
 /* ==========================================================
    ■ 初期化
    ========================================================== */
 
+/* ----------------------------------------------------------
+   init(): 画面を開いたときの準備
+   ・前の割り当てを消す（この画面に入るたびに参加し直す）
+   ・#connectPad に入力確認のボタン列を作る（1回だけ）
+   ・保存してある選択人数を、画面に反映する
+   ※ 呼び出しはファイルの一番最後（下の「起動」）
+   ---------------------------------------------------------- */
 function init() {
   GP.rst(); // 全員の割り当てを消す
+  mkK(); // 入力確認の枠を作る
   setPlCnt(GP.getTar()); // 保存済みの人数（無ければ初期値）で画面を整える
 }
 
@@ -39,22 +49,44 @@ function pEl(p, k) {
   return document.getElementById(`pad${p + 1}${k}`);
 }
 
+/* ----------------------------------------------------------
+   drawP(p): Pのカードを、今の状態（参加済みかどうか）に合わせて描き直す
+   ・コントローラの情報は .player のカードにまとめる（スロット番号と機種名）
+   ---------------------------------------------------------- */
+function drawP(p) {
+  const g = GP.pad(p); // そのPのコントローラ（未参加・切断なら null）
+  pEl(p, "Img").style.display = g ? "block" : "none";
+  pEl(p, "Text").textContent = g ? "SUCCESS" : "Aボタンで参加";
+  pEl(p, "Name").textContent = g ? `Slot ${g.index} / ${g.id}` : "";
+}
+
+/* ----------------------------------------------------------
+   drawAll(): 全員のカードを描き直す
+   切断時は繰り上げでPの中身が入れ替わるので、1枚だけでは足りない
+   ---------------------------------------------------------- */
+function drawAll() {
+  for (let p = 0; p < GP.MAX; p++) drawP(p);
+}
+
 /* ==========================================================
    ■ 人数選択機能
    ========================================================== */
 
 /* ----------------------------------------------------------
-   setCnt(n): 選択人数を n にして、画面に反映する
+   setPlCnt(n): 選択人数を n にして、画面に反映する
    ・gamepadAPI 側に人数を保存（範囲外ならここで終了）
-   ・人数を超えたカードは隠す
+   ・人数を超えたカードと、その入力確認ラインを隠す
    ・選んだ人数のボタンだけ .sel を付ける
-   ・次へボタンの有効/無効を再判定
+   ・確定ボタンの有効/無効を再判定
    ---------------------------------------------------------- */
 function setPlCnt(n) {
   if (!GP.setTar(n)) return; // 1〜4 の整数以外は無視
 
   plCords.forEach((d, i) => {
     d.style.display = i < n ? "" : "none"; // "" は CSS 本来の表示に戻す
+  });
+  kBox.forEach((d, i) => {
+    d.style.display = i < n ? "" : "none"; // カードと同じ区切りなので一緒に隠す
   });
   cntBtn.forEach((b) => {
     b.classList.toggle("sel", Number(b.dataset.n) === n); // 選択中の見た目
@@ -63,7 +95,7 @@ function setPlCnt(n) {
 }
 
 /* ---- イベントリスナ ---- */
-// 人数ボタン: 押された data-n の数字で setCnt を呼ぶ（文字列→数値に変換）
+// 人数ボタン: 押された data-n の数字で setPlCnt を呼ぶ（文字列→数値に変換）
 cntBtn.forEach((b) => {
   b.addEventListener("click", () => setPlCnt(Number(b.dataset.n)));
 });
@@ -75,32 +107,44 @@ cntBtn.forEach((b) => {
 /* ----------------------------------------------------------
    join(idx): スロット idx のコントローラを、空いている最初のPに登録する
    ・登録済みのコントローラなら何もしない
+   ・同じ機種の登録が切れていれば、そのPを上書きする
    ・選択人数の範囲に空きが無ければ何もしない
    ---------------------------------------------------------- */
 function join(idx) {
   if (GP.who(idx) !== -1) return; // 既に参加済みなら無視
 
-  const p = GP.free(); // 選択人数の範囲での最初の空き P
+  let p = GP.dup(idx); // 同じ機種の登録が切れていれば、そこを上書き
+  if (p === -1) p = GP.free(); // 無ければ、空いている最初のP
   if (p === -1) return; // 空き無し
 
   GP.asg(p, idx); // 割り当てを記録（sessionStorage にも保存される）
 
-  // ---- ここから表示 ----
-  const g = GP.pad(p); // 割り当てた直後のコントローラ（抜けていれば null）
-  pEl(p, "Img").style.display = "block"; // 画像を表示
-  pEl(p, "Text").textContent = "参加完了"; // 文言を変える
-  pEl(p, "Name").textContent = g ? g.id : ""; // コントローラ名
-
+  drawP(p); // そのPのカードを描き直す
   ready();
 }
 
+/* ---- イベントリスナ ---- */
+// 切断通知: gamepadAPI 側で繰り上げ済みなので、全員分を描き直して知らせる
+GP.onCut((p) => {
+  // 繰り上げで後ろの人が入ってきたか（入ってきていれば、そのPは今つながっている）
+  const up = GP.live(p);
+
+  drawAll(); // Pの中身が入れ替わるので全員分
+  ready(); // 確定ボタンを再判定（alert は画面を止めるので、先に済ませる）
+
+  alert(
+    `${p + 1}Pのコントローラが切断されました。` +
+      (up ? "\n後ろのプレイヤーを繰り上げました。" : ""),
+  ); // ポップアップ
+});
+
 /* ==========================================================
-   ■ 次へ判定機能
+   ■ 確定判定機能
    ========================================================== */
 
 /* ----------------------------------------------------------
    ready(): 選択人数ぶん全員のコントローラが「今つながっている」か調べて、
-   次へボタンの有効/無効を切り替える
+   確定ボタンの有効/無効を切り替える
    ---------------------------------------------------------- */
 function ready() {
   const n = GP.getTar(); // 選択人数
@@ -114,38 +158,76 @@ function ready() {
   nxt.disabled = !ok; // 全員OKなら押せる
 }
 
+/* ---- イベントリスナ ---- */
+nxt.addEventListener("click", () => {
+  for (let p = GP.getTar(); p < GP.MAX; p++) GP.rst(p); // 人数外のPの割り当てを消す
+
+  const bad = GP.vfy(); // 保存内容を読み直して確認（問題の説明の配列）
+  if (bad.length > 0) {
+    alert("保存内容に問題があります。\n" + bad.join("\n"));
+    return; // 遷移しない
+  }
+  // location.href = "4-2.html"; // 遷移先は未定（決まったら有効にする）
+});
+
 /* ==========================================================
-   ■ 接続一覧表示機能（確認用）
+   ■ 入力確認機能（確認用：押している間だけ光る）
    ========================================================== */
 
+/* ---- 機能限定の要素の宣言 ---- */
+// [ボタン番号, 表示する文字]。標準配置のコントローラの番号。機種で違えばここだけ直す
+const KEYS = [
+  [12, "↑"],
+  [13, "↓"],
+  [14, "←"],
+  [15, "→"],
+  [0, "A"],
+  [1, "B"],
+  [2, "X"],
+  [3, "Y"],
+];
+const kEls = []; // kEls[p] = Pの確認枠（span）の配列
+const kBox = []; // kBox[p] = Pの区切り（.keys の div）。表示/非表示の切り替えに使う
+
 /* ----------------------------------------------------------
-   showL(pads): 今つながっているコントローラの一覧を表示する
-   ・内容が前回と同じなら書き換えない（毎フレームの無駄な更新を避ける）
+   mkK(): #connectPad の中に、Pごとの入力確認ラインを1回だけ作る（init から呼ぶ）
+   ・HTMLには書かず、ここで作る
+   ・1Pぶんを1つの区切り（.keys）にして、.player と同じ数・同じ並びにする
+     → カードの真下にボタンがそろう（幅をそろえるのは CSS 側）
+   ・作った要素は kEls（span）と kBox（区切り）に覚えておく
    ---------------------------------------------------------- */
-function showL(pads) {
-  if (!lst) return; // 表示先が無ければ何もしない
-
-  let html = "<h2>接続中のコントローラー</h2>";
-  let cnt = 0; // つながっている台数
-  pads.forEach((g, i) => {
-    if (!g) return; // 空きスロットは飛ばす
-    cnt++;
-    html += `<div>Slot ${i}<br>${g.id}</div><br>`;
-  });
-  if (cnt === 0) html += "接続されていません";
-
-  if (html === lstH) return; // 前回と同じなら更新しない
-  lstH = html;
-  lst.innerHTML = html;
+function mkK() {
+  for (let p = 0; p < plCords.length; p++) {
+    const box = document.createElement("div"); // 1Pぶんの区切り（8個の入れ物）
+    box.className = "keys";
+    box.dataset.n = p + 1; // 何Pぶんか（確認用）
+    kEls[p] = KEYS.map(([b, t]) => {
+      const e = document.createElement("span");
+      e.className = "key";
+      e.dataset.b = b; // ボタン番号（確認用）
+      e.textContent = t; // 表示する文字
+      box.appendChild(e);
+      return e;
+    });
+    padLn.appendChild(box);
+    kBox[p] = box;
+  }
 }
 
-/* ---- イベントリスナ ---- */
-window.addEventListener("gamepadconnected", (e) => {
-  console.log("接続:", e.gamepad.id);
-});
-window.addEventListener("gamepaddisconnected", (e) => {
-  console.log("切断:", e.gamepad.id);
-});
+/* ----------------------------------------------------------
+   showK(): 参加済みのPのコントローラで、押している間だけ .on を付ける
+   ・未参加/切断のPは、全部消灯
+   ・ボタンが無い機種は、そのボタンだけ消灯のまま
+   ---------------------------------------------------------- */
+function showK() {
+  kEls.forEach((els, p) => {
+    const g = GP.pad(p); // そのPのコントローラ（未参加・切断なら null）
+    els.forEach((e, i) => {
+      const b = g ? g.buttons[KEYS[i][0]] : null; // ボタン（無ければ undefined）
+      e.classList.toggle("on", !!(b && b.pressed)); // 押している間だけ .on
+    });
+  });
+}
 
 /* ==========================================================
    ■ 監視ループ機能
@@ -155,17 +237,17 @@ window.addEventListener("gamepaddisconnected", (e) => {
    loop(): 毎フレーム呼ばれる
    1. コントローラを読む（フレームの頭で1回だけ）
    2. Aボタンを押した瞬間のコントローラを参加登録
-   3. 一覧と次へボタンを更新
+   3. 入力確認・次へボタンを更新
    4. 次のフレームでもう一度 loop を呼ぶ
    ---------------------------------------------------------- */
 function loop() {
-  const pads = GP.poll(); // 1. 読む（押した瞬間の判定もここで更新される）
+  GP.poll(); // 1. 読む（押した瞬間の判定もここで更新される）
 
   for (let i = 0; i < GP.MAX; i++) {
     if (GP.dn(i, BTN)) join(i); // 2. Aを押した瞬間なら参加
   }
 
-  showL(pads); // 3. 一覧
+  showK(); // 3. 入力確認（押している間だけ光る）
   ready(); //    次へ（抜き差しも拾う）
 
   requestAnimationFrame(loop); // 4. 次のフレームへ

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css\Member.css" />
+    <link rel="stylesheet" href="css/Member.css" />
     <script defer type="module" src="js/gamepadAPI.js"></script>
     <script defer type="module" src="js/Member.js"></script>
     <title>人数選択</title>
@@ -21,7 +21,7 @@
     <main>
       <article>
         <!-- jsは表示・非表示のみ-->
-        <section id="conectPlace">
+        <section id="connectPlace">
           <div class="player" data-n="1">
             <h3>1P</h3>
             <img id="pad1Img" src="img/hello.png" />
@@ -33,7 +33,7 @@
             <h3>2P</h3>
             <img id="pad2Img" src="img/hello.png" />
             <p id="pad2Text">Aボタンで参加</p>
-            <div id="pad2 Name" class="name"></div>
+            <div id="pad2Name" class="name"></div>
           </div>
 
           <div class="player" data-n="3" style="display: none">
@@ -51,11 +51,12 @@
           </div>
         </section>
 
-        <section id="conectPad"></section>
-      </article>
+        <!-- 入力確認のボタン列は Member.js が各P分を作る（.player と同じ区切り） -->
+        <section id="connectPad"></section>
 
-      <button onclick="history.back()">戻る</button>
-      <button id="nextBtn" disabled>次へ</button>
+        <button onclick="history.back()">戻る</button>
+        <button id="nextBtn" disabled>参加人数を確定</button>
+      </article>
     </main>
   </body>
 </html>
