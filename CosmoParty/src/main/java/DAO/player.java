@@ -8,8 +8,12 @@ import Model.PlayerJb;
 
 public class player extends base{
 
+	public player() {
+		
+	};
+	
 	//アカウント登録
-	protected boolean insert(PlayerJb player) {
+	public boolean insert(PlayerJb player) {
 		boolean success =false;
 		
 		try {
