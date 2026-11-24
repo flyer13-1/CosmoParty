@@ -97,6 +97,7 @@ function save() {
 let snp = []; // 最新のコントローラ一覧
 let bef = []; // 前フレームのボタン状態 bef[スロット][ボタン番号]
 let dwn = []; // 今フレームで「押した瞬間」のボタン dwn[スロット][ボタン番号]
+let hld = [];
 
 /* ----------------------------------------------------------
    poll(): 接続済みコントローラの情報 + ボタンの判定
@@ -107,14 +108,16 @@ let dwn = []; // 今フレームで「押した瞬間」のボタン dwn[スロ�
 function poll() {
   const g = navigator.getGamepads ? navigator.getGamepads() : null;
   snp = g ? Array.from(g) : [];
+  hld = [];
 
   dwn = snp.map((p, i) => {
-    // コントローラが無いスロットは、前回状態も消す
     if (!p) {
       bef[i] = [];
+      hld[i] = [];
       return [];
     }
     const now = p.buttons.map((b) => b.pressed); // 今のボタン状態
+    hld[i] = now; // ★追加: 押している間ずっと true
 
     // 「今は押されている」かつ「前回は押されていない」ものだけ true
     const dn = now.map((v, k) => v && !(bef[i] && bef[i][k]));
@@ -129,6 +132,15 @@ function poll() {
    ---------------------------------------------------------- */
 function dn(idx, b = 0) {
   return !!(dwn[idx] && dwn[idx][b]);
+}
+
+/* ----------------------------------------------------------
+   hold(idx, b): スロット idx のボタン b を、今押している間 true
+   b を省略すると 0番（Aボタン）。押し始めだけでなく、押している間ずっと true。
+   スロットやボタンが存在しない場合は false（エラーにしない）
+   ---------------------------------------------------------- */
+function hold(idx, b = 0) {
+  return !!(hld[idx] && hld[idx][b]);
 }
 
 /* ----------------------------------------------------------
@@ -163,6 +175,18 @@ function who(idx) {
 }
 
 /* ----------------------------------------------------------
+   dup(idx): スロット idx のコントローラと同じ機種(id)が、すでにPに登録されていて、
+   そのPのコントローラが今つながっていない場合、そのPの番号（0始まり）。無ければ -1
+   抜き差しでスロット番号が変わったときに、新しいPを作らず上書きするための判定。
+   同じ機種を2台つないでいる場合は、片方が live なので -1（別人として扱う）
+   ---------------------------------------------------------- */
+function dup(idx) {
+  const g = snp[idx];
+  if (!g) return -1;
+  return pls.findIndex((s, p) => s.idx !== null && s.id === g.id && !live(p));
+}
+
+/* ----------------------------------------------------------
    free(): 選択人数の範囲で、最初の空き P（0始まり）。無ければ -1
    隠れている枠(選択人数の外)には入れない
    ---------------------------------------------------------- */
@@ -181,30 +205,6 @@ function asg(p, idx) {
   pls[p].id = g.id;
   save();
   return true;
-}
-
-/* ----------------------------------------------------------
-   auto(): 自動で割り当てを行う。　今回は利用しない。
-   ※ 先に poll() を済ませておくこと（この関数の中では呼ばない）
-   ※ 切断されたコントローラの割り当ては消さない。
-     （新しいページを開いた直後は、ボタンを押すまで一覧が空になる。
-       ここで消すと、ページ遷移のたびに割り当てが消えるため）
-     消したいときは rst() を使う。
-   ---------------------------------------------------------- */
-function auto() {
-  snp.forEach((g, i) => {
-    if (!g || !g.connected) return;
-    // すでに割り当て済みか確認
-    const had = pls.some((s) => s.idx === i && s.id === g.id);
-    if (had) return;
-    // 空いている最初のPに入れる
-    const p = pls.findIndex((s) => s.idx === null);
-    if (p >= 0) {
-      pls[p].idx = i;
-      pls[p].id = g.id;
-    }
-  });
-  save();
 }
 
 /* ----------------------------------------------------------
@@ -232,6 +232,84 @@ function rst(p) {
   else f(pls[p]);
   save();
 }
+
+/* ----------------------------------------------------------
+   vfy(): sessionStorage に「実際に保存されている内容」を読み直して、
+   次のページに渡せる状態か確認する。問題の説明の配列を返す（空なら OK）。
+   ※ メモリ上の pls ではなく、保存先を読み直すのが目的
+   ---------------------------------------------------------- */
+function vfy() {
+  const out = []; // 問題の説明を入れていく
+  const n = tarPls; // 今の選択人数
+
+  // 人数の保存を確認
+  if (Number(sessionStorage.getItem(KEYT)) !== n) {
+    out.push("人数が保存されていません");
+  }
+
+  // Pごとの記録を、保存先から読み直す
+  let d = null;
+  try {
+    d = JSON.parse(sessionStorage.getItem(KEY));
+  } catch (e) {
+    /* 壊れている場合は d が null のまま */
+  }
+  if (!Array.isArray(d) || d.length !== MAX) {
+    out.push("コントローラーの記録が読めません");
+    return out; // これ以上は調べられない
+  }
+
+  // 選択人数ぶんの idx / id を確認
+  for (let p = 0; p < n; p++) {
+    const s = d[p];
+    const okI = s && Number.isInteger(s.idx) && s.idx >= 0; // idx は 0以上の整数
+    const okD = s && typeof s.id === "string" && s.id !== ""; // id は空でない文字列
+    if (!okI || !okD) out.push(`${p + 1}Pの idx / id が保存されていません`);
+  }
+
+  // 同じスロットの重複を確認
+  const idxs = d
+    .slice(0, n)
+    .map((s) => (s ? s.idx : null))
+    .filter((v) => v !== null);
+  if (new Set(idxs).size !== idxs.length) {
+    out.push("同じコントローラーが複数のPに登録されています");
+  }
+  return out;
+}
+
+/* ==========================================================
+   ■ 接続イベント機能
+   ========================================================== */
+
+/* ---- 機能限定の変数 ---- */
+let cutF = null; // 切断されたときに呼ぶ関数（使う側が onCut で登録する）
+
+/* ----------------------------------------------------------
+   onCut(fn): 「割り当て済みのPのコントローラが抜けた」ときに呼ぶ関数を登録する
+   fn は P の番号（0始まり）を受け取る。例: GP.onCut((p) => { ... });
+   ---------------------------------------------------------- */
+function onCut(fn) {
+  cutF = fn;
+}
+
+/* ---- イベントリスナ ---- */
+// 接続: 確認用のログだけ（読み取りは poll で拾えるので、ここで割り当てはしない）
+window.addEventListener("gamepadconnected", (e) => {
+  console.log("接続:", e.gamepad.id);
+});
+
+// 切断: 抜けたコントローラが、割り当て済みの P か調べる
+window.addEventListener("gamepaddisconnected", (e) => {
+  // e.gamepad.index はスロット番号。idx と id が両方合う P を探す（無ければ -1）
+  const p = pls.findIndex(
+    (s) => s.idx === e.gamepad.index && s.id === e.gamepad.id,
+  );
+  console.log("切断:", e.gamepad.id, "→ P", p);
+  if (p === -1) return; // 参加者のコントローラでなければ何もしない
+  rst(p); // 対象の割り当てを消す（ログイン情報は残る）
+  if (cutF) cutF(p); // 使う側にPの番号を通知（ポップアップは使う側で出す）
+});
 
 /* ==========================================================
    ■ 選択人数機能
@@ -302,16 +380,19 @@ export {
   MAX,
   poll,
   dn,
+  hold,
   pad,
   live,
   who,
+  dup,
   free,
   asg,
-  auto,
   chk,
   rst,
+  vfy,
   getTar,
   setTar,
+  onCut,
   lgin,
   lout,
   pl,
