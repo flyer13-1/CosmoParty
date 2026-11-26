@@ -16,7 +16,7 @@
         <p id="start">ボタンを押してください</p>
     </div>
     <div id="menu">
-        <a href="モード.html">
+        <a href="${pageContext.request.contextPath}/WEB-INF/jsp/List.jsp">
             <button id="ゲームスタート">モード選択</button>
         </a>
         <a href="${pageContext.request.contextPath}/SignUp">
