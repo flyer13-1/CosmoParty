@@ -7,16 +7,19 @@ body{
 }
 
 h1{
-    margin-top:20px;
+    font-size:32px;
 }
 
 .info{
+    font-size:20px;
+
     display:flex;
     justify-content:center;
-    gap:50px;
-    font-size:24px;
-}
 
+    gap:40px;
+
+    margin-bottom:20px;
+}
 .gameArea{
     height:300px;
     display:flex;
@@ -33,17 +36,17 @@ h1{
 }
 
 .hp-box{
-    width:500px;
-    height:30px;
+    width:100%;
+    height:20px;
+
     border:2px solid white;
-    margin:20px auto;
 }
 
 .hp-bar{
     width:100%;
     height:100%;
+
     background:limegreen;
-    transition:width 0.2s;
 }
 
 #attackButton{
@@ -63,4 +66,45 @@ h1{
     color:yellow;
     font-size:30px;
     height:50px;
+}
+.player-select{
+    margin:20px;
+}
+
+.player-select button{
+    padding:10px 20px;
+    margin:0 5px;
+    font-size:20px;
+}
+
+.players{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+
+    width:100%;
+}
+
+.player{
+    width:220px;
+
+    background:#0b1f44;
+
+    border:2px solid white;
+    border-radius:15px;
+
+    padding:10px;
+
+    text-align:center;
+}
+
+.player img{
+    width:100px;
+    height:100px;
+}
+.player img{
+    width:120px;
+    height:120px;
+
+    object-fit:contain;
 }

@@ -1,0 +1,111 @@
+@charset "UTF-8";
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#e5e5e5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:"Yu Gothic",sans-serif;
+}
+
+.main-container{
+    width:1000px;
+    background:#082847;
+    border:6px solid black;
+    border-radius:10px;
+    padding:25px;
+}
+
+.top-area{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.top-area h1{
+    color:white;
+    font-size:25px;
+}
+
+.count-btn{
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:6px;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.count-btn.selected{
+    border:3px solid orange;
+}
+
+.player-area{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.player-card{
+    text-align:center;
+}
+
+.pad-box{
+    width:120px;
+    height:120px;
+    background:black;
+    border:2px solid white;
+    border-radius:8px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.pad-box h2{
+    color:orange;
+    margin-bottom:8px;
+}
+
+.pad-box p{
+    color:white;
+    font-size:14px;
+}
+
+.pad-box img{
+    width:90px;
+    height:auto;
+}
+
+.player-name{
+    width:120px;
+    margin-top:10px;
+    background:white;
+    border-radius:5px;
+    padding:10px;
+    text-align:center;
+}
+
+.bottom-area{
+    margin-top:40px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.menu-btn{
+    width:100px;
+    height:45px;
+    border:none;
+    border-radius:5px;
+    font-size:18px;
+    cursor:pointer;
+}

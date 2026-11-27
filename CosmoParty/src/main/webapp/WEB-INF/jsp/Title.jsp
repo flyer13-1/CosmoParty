@@ -16,7 +16,7 @@
         <p id="start">ボタンを押してください</p>
     </div>
     <div id="menu">
-        <a href="${pageContext.request.contextPath}/MenberCom">
+        <a href="${pageContext.request.contextPath}/MemberCom">
             <button id="ゲームスタート">モード選択</button>
         </a>
         <a href="${pageContext.request.contextPath}/SignUp">
